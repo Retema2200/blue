@@ -6,11 +6,11 @@ self.addEventListener('install', event => {
           '/blue/app.js',
           '/blue/styles.css',
           '/blue/manifest.json',
-          '/images/icon-192.png',
-          '/images/icon-512.png',
+          '/blue/images/icon-192.png',
+          '/blue/images/icon-512.png',
           '/blue/images/icon-144x144.png', 
-          '/images/screenshot1-wide.png',  
-          '/images/screenshot2-narrow.png'
+          '/blue/images/screenshot1-wide.png',  
+          '/blue/images/screenshot2-narrow.png'
         ]);
       })
     );
