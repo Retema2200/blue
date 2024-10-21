@@ -8,7 +8,7 @@ self.addEventListener('install', event => {
           '/blue/manifest.json',
           '/images/icon-192.png',
           '/images/icon-512.png',
-          '/images/icon-144x144.png', 
+          '/blue/images/icon-144x144.png', 
           '/images/screenshot1-wide.png',  
           '/images/screenshot2-narrow.png'
         ]);
