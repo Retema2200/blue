@@ -2,15 +2,15 @@ self.addEventListener('install', event => {
     event.waitUntil(
       caches.open('pwa-cache-v1').then(cache => {
         return cache.addAll([
-          '/index.html',
-          '/app.js',
-          '/styles.css',
-          '/manifest.json',
-          '/images/icon-192.png',
-          '/images/icon-512.png',
-          '/images/icon-144x144.png', 
-          '/images/screenshot1-wide.png',  
-          '/images/screenshot2-narrow.png'
+          '/blue/index.html',
+          '/blue/app.js',
+          '/blue/styles.css',
+          '/blue/manifest.json',
+          '/blue/images/icon-192.png',
+          '/blue/images/icon-512.png',
+          '/blue/images/icon-144x144.png', 
+          '/blue/images/screenshot1-wide.png',  
+          '/blue/images/screenshot2-narrow.png'
         ]);
       })
     );
