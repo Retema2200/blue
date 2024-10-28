@@ -16,10 +16,10 @@ body {
   button {
     padding: 10px 20px;
     font-size: 16px;
-    color: white;
-    background-color: #007bff;
     border: none;
     border-radius: 5px;
+    background-color: #007BFF; /* 藍色背景 */
+    color: white; /* 白色文字 */
     cursor: pointer;
   }
   
@@ -27,3 +27,9 @@ body {
     background-color: #0056b3;
   }
   
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* 按鈕之間的間距 */
+  }
