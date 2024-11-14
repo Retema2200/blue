@@ -7,24 +7,19 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="/blue/images/favicon.ico" type="image/x-icon">
-
-
 </head>
 <body>
-  <h1>PWA 藍牙應用</h1>
-  <div class="button-container">
-
-  <button id="connectButton">連接藍芽</button>
-
-  <button class="sendButton" disabled data-message="01">發送消息一</button>
-  <button class="sendButton" disabled data-message="02">發送消息二</button>
-  <button class="sendButton" disabled data-message="03">發送消息三</button>
-  <button id="disconnectButton"  disabled >斷開連線</button>
-
+  <div class="app-container">
+    <h1>智慧拐杖 藍牙應用</h1>
+    <div id="ledStatus">LED 狀態將顯示在這裡</div>
+    <div class="button-container">
+      <button id="connectButton">連接藍芽</button>
+      <button class="sendButton" disabled data-message="01">觸發一</button>
+      <button class="sendButton" disabled data-message="02">觸發二</button>
+      <button class="sendButton" disabled data-message="03">觸發三</button>
+      <button id="disconnectButton" disabled>斷開連線</button>
+    </div>
   </div>
   <script src="app.js"></script>
 </body>
-
-
-
-</html>           
+</html>
