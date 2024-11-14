@@ -1,5 +1,33 @@
 let writeCharacteristic; 
+let notifyCharacteristic; // 新增一個變量以保存通知的特徵值
 let currentDevice;
+
+const statusDisplay = document.getElementById('ledStatus'); // 根據你的 HTML 元素 ID 來修改
+
+function handleNotification(event) {
+  const value = new Uint8Array(event.target.value.buffer);
+  console.log(value);  // 檢查從藍牙接收到的資料
+
+  for (let i = 0; i < value.length; i++) {
+    console.log(`value[${i}] = ${value[i]}`);
+  }
+
+
+  const ledStatus = value[0];  // 取得 LED 狀態
+  console.log(ledStatus);  // 查看控制台的輸出是否還有 177
+
+  // 僅處理有效的 LED 狀態（1, 2, 3），忽略其他狀態
+  if (ledStatus === 1) {
+    statusDisplay.textContent = 'LED 1 開啟, LED 2 關閉';
+  } else if (ledStatus === 2) {
+    statusDisplay.textContent = 'LED 1 關閉, LED 2 開啟';
+  } else if (ledStatus === 3) {
+    statusDisplay.textContent = 'LED 1 關閉, LED 2 關閉';
+  } else {
+    statusDisplay.textContent = '未知狀態';
+  }
+}
+
 
  document.getElementById('connectButton').addEventListener('click', async () => {
     try {
@@ -10,11 +38,9 @@ let currentDevice;
       ({
         filters: [{ services: ['battery_service'] }],
         optionalServices: ['battery_service', '0000fff0-0000-1000-8000-00805f9b34fb']
-      });
-      
+      });   
       console.log('藍牙設備已找到: ', device.name);
       currentDevice = device; // 保存當前設備
-
 
       // 連接 GATT 服務
       const server = await device.gatt.connect();
@@ -24,13 +50,24 @@ let currentDevice;
       const unknownService = await server.getPrimaryService('0000fff0-0000-1000-8000-00805f9b34fb');
       console.log('0xFFF0 服務已找到');
 
+      const notifyCharacteristic = await unknownService.getCharacteristic('0000fff1-0000-1000-8000-00805f9b34fb');
+      notifyCharacteristic.addEventListener('characteristicvaluechanged', handleNotification);
+      await notifyCharacteristic.startNotifications(); // 開始接收通知
+      console.log('已啟用通知 0xFFF1');
+
+
+
+      // 獲取特徵值 0xFFF2
+      writeCharacteristic = await unknownService.getCharacteristic('0000fff2-0000-1000-8000-00805f9b34fb');
+      console.log('獲取特偵值0xFFF2');
+
+
+
+
       // 獲取 Battery Service
       const batteryService = await server.getPrimaryService('battery_service');
       const batteryLevelCharacteristic = await batteryService.getCharacteristic('battery_level');
       
-      // 獲取特徵值 0xFFF2
-      writeCharacteristic = await unknownService.getCharacteristic('0000fff2-0000-1000-8000-00805f9b34fb');
-      console.log('獲取特偵值0xFFF2');
 
 
       document.querySelectorAll('.sendButton').forEach(button => {
@@ -51,6 +88,17 @@ let currentDevice;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 // 將所有發送按鈕綁定到相同的事件處理器
 document.querySelectorAll('.sendButton').forEach(button => {
   button.addEventListener('click', async (event) => {
@@ -65,6 +113,7 @@ document.querySelectorAll('.sendButton').forEach(button => {
       await writeCharacteristic.writeValue(data);
 
       console.log(`數據已寫入特徵值 0xFFF2: ${message}`);
+
     } catch (error) {
       console.log('發送數據失敗: ', error);
     }
