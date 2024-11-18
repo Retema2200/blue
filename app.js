@@ -2,7 +2,7 @@ let writeCharacteristic;
 let notifyCharacteristic; // 新增一個變量以保存通知的特徵值
 let currentDevice;
 
-const statusDisplay = document.getElementById('ledStatus'); // 根據你的 HTML 元素 ID 來修改
+const statusDisplay = document.getElementById('dataValue'); // 根據你的 HTML 元素 ID 來修改
 
 function handleNotification(event) {
   const value = new Uint8Array(event.target.value.buffer);
@@ -11,21 +11,28 @@ function handleNotification(event) {
   for (let i = 0; i < value.length; i++) {
     console.log(`value[${i}] = ${value[i]}`);
   }
+  const dataType = value[0]; // 第一個字節是數據類型
+  const dataValue = value[1]; // 第二個字節是數據值
+  console.log(`Data Type: ${dataType}, Data Value: ${dataValue}`);
 
 
-  const ledStatus = value[0];  // 取得 LED 狀態
-  console.log(ledStatus);  // 查看控制台的輸出是否還有 177
-
-  // 僅處理有效的 LED 狀態（1, 2, 3），忽略其他狀態
-  if (ledStatus === 1) {
-    statusDisplay.textContent = 'LED 1 開啟, LED 2 關閉';
-  } else if (ledStatus === 2) {
-    statusDisplay.textContent = 'LED 1 關閉, LED 2 開啟';
-  } else if (ledStatus === 3) {
-    statusDisplay.textContent = 'LED 1 關閉, LED 2 關閉';
-  } else {
-    statusDisplay.textContent = '未知狀態';
+  switch (dataType) {
+    case 0x01: // 溫度
+      statusDisplay.textContent = `目前溫度：${dataValue}°C`;
+      break;
+    case 0x02: // 血氧
+      statusDisplay.textContent = `目前血氧：${dataValue}%`;
+      break;
+    case 0x03: // 壓力
+      statusDisplay.textContent = `目前壓力：${dataValue} kPa`;
+      break;
+    case 0x04: // 光照值
+      statusDisplay.textContent = `目前光照值：${dataValue} lux`;
+      break;
+    default:
+      statusDisplay.textContent = '未知數據類型';
   }
+
 }
 
 
