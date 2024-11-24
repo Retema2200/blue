@@ -12,12 +12,12 @@
 <body>
   <div class="app-container">
     <h1>智慧拐杖 藍牙應用</h1>
-    <div id="dataValue">LED 狀態將顯示在這裡</div>
+    <div id="dataValue">狀態將顯示在這裡</div>
     <div class="button-container">
       <button id="connectButton">連接藍芽</button>
-      <button class="sendButton" disabled data-message="01">觸發一</button>
-      <button class="sendButton" disabled data-message="02">觸發二</button>
-      <button class="sendButton" disabled data-message="03">觸發三</button>
+      <button class="sendButton" disabled data-message="2">量測溫度</button>
+      <button class="sendButton" disabled data-message="3">量測氣壓</button>
+      <button id="measureOxygenButton" class="sendButton" disabled data-message="4">量測血氧</button>     
       <button id="disconnectButton" disabled>斷開連線</button>
     </div>
   </div>
