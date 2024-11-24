@@ -5,29 +5,62 @@ let currentDevice;
 const statusDisplay = document.getElementById('dataValue'); // 根據你的 HTML 元素 ID 來修改
 
 function handleNotification(event) {
-  const value = new Uint8Array(event.target.value.buffer);
+  let value = new Uint8Array(); // 清空 value
+  
+ value = new Uint8Array(event.target.value.buffer);
   console.log(value);  // 檢查從藍牙接收到的資料
 
-  for (let i = 0; i < value.length; i++) {
+  for (let i = 0; i < value.length; i++) 
+  {
     console.log(`value[${i}] = ${value[i]}`);
   }
   const dataType = value[0]; // 第一個字節是數據類型
-  const dataValue = value[1]; // 第二個字節是數據值
-  console.log(`Data Type: ${dataType}, Data Value: ${dataValue}`);
+
+
+
+
 
 
   switch (dataType) {
     case 0x01: // 溫度
-      statusDisplay.textContent = `目前溫度：${dataValue}°C`;
+      const tempValue = (value[1] | (value[2] << 8)) / 10;
+      const humValue = (value[3] | (value[4] << 8)) / 10;
+      console.log(`溫度數據: ${tempValue.toFixed(1)}°C`);
+      console.log(`濕度數據: ${humValue.toFixed(1)}%`);
+
+      statusDisplay.textContent = `目前溫度：${tempValue.toFixed(1)}°C，濕度：${humValue.toFixed(1)}%`;
+    
+    
       break;
     case 0x02: // 血氧
-      statusDisplay.textContent = `目前血氧：${dataValue}%`;
+
+    const bldValue = (value[1] | (value[2] << 8));
+    const hbrValue = (value[3] | (value[4] << 8));
+    console.log(`血氧數據: ${bldValue}%`);
+    console.log(`心率數據: ${hbrValue} BPM`);
+
+
+
+
+
+
+    statusDisplay.textContent = `目前血氧：${bldValue}% ，心率：${hbrValue} BPM`;
+
       break;
     case 0x03: // 壓力
-      statusDisplay.textContent = `目前壓力：${dataValue} kPa`;
+      const glvValue = value[1] | (value[2] << 8); // 合併低位和高位
+      const relglv = glvValue / 10;
+      console.log(`壓力數據: ${relglv} hpa`);
+
+      statusDisplay.textContent = `目前壓力值：${relglv.toFixed(1)} hpa`; 
       break;
     case 0x04: // 光照值
-      statusDisplay.textContent = `目前光照值：${dataValue} lux`;
+      const dataValue = value[1] | (value[2] << 8); // 合併低位和高位
+      const lightIntensity = dataValue / 10;
+
+
+      console.log(`光照數據: ${lightIntensity} lux`);
+      statusDisplay.textContent = `目前光照值：${lightIntensity.toFixed(1)} lux`; 
       break;
     default:
       statusDisplay.textContent = '未知數據類型';
@@ -94,18 +127,6 @@ function handleNotification(event) {
   });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // 將所有發送按鈕綁定到相同的事件處理器
 document.querySelectorAll('.sendButton').forEach(button => {
   button.addEventListener('click', async (event) => {
@@ -149,3 +170,15 @@ document.getElementById('disconnectButton').addEventListener('click', async () =
     console.log('斷開連接失敗: ', error);
   }
 });
+
+document.querySelector('#measureOxygenButton').addEventListener('click', async () => {
+  try {
+    // 顯示「正在量測」的提示
+    statusDisplay.textContent = "正在量測血氧與心率...";
+
+    console.log('已發送血氧量測命令: 0x34');
+  } catch (error) {
+    console.error('量測命令發送失敗:', error);
+    statusDisplay.textContent = "量測失敗，請重試";
+  }
+}); 
