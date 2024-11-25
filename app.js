@@ -6,7 +6,7 @@ const statusDisplay = document.getElementById('dataValue'); // 根據你的 HTML
 
 function handleNotification(event) {
   let value = new Uint8Array(); // 清空 value
-  
+  let message = '';
  value = new Uint8Array(event.target.value.buffer);
   console.log(value);  // 檢查從藍牙接收到的資料
 
@@ -60,6 +60,7 @@ function handleNotification(event) {
     default:
       statusDisplay.textContent = '未知數據類型';
   }
+  console.log(message);
   sendLineNotify(message);
 }
 
