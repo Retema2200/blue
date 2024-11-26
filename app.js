@@ -57,8 +57,7 @@ function handleNotification(event) {
     default:
       statusDisplay.textContent = '未知數據類型';
   }
-  console.log(message);
-  sendLineNotify(message);
+
 }
 
 
