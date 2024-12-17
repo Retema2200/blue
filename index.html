@@ -8,19 +8,35 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="/blue/images/favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 </head>
+
 <body>
   <div class="app-container">
     <h1>智慧拐杖 藍牙應用</h1>
-    <div id="dataValue">狀態將顯示在這裡</div>
+    <div id="dataValue">請連接藍芽</div>
     <div class="button-container">
-      <button id="connectButton">連接藍芽</button>
-      <button class="sendButton" disabled data-message="2">量測溫度</button>
-      <button class="sendButton" disabled data-message="3">量測氣壓</button>
-      <button id="measureOxygenButton" class="sendButton" disabled data-message="4">量測血氧</button>     
-      <button id="disconnectButton" disabled>斷開連線</button>
+      <button id="connectButton"><i class="fas fa-bluetooth"></i> 連接藍芽</button>
+      <button class="sendButton" disabled data-message="2"><i class="fas fa-thermometer-half"></i> 量測溫濕度</button>
+      <button class="sendButton" disabled data-message="3"><i class="fas fa-cloud"></i> 量測氣壓</button>
+      <button id="measureOxygenButton" class="sendButton" disabled data-message="4"><i class="fas fa-heartbeat"></i> 量測血氧</button>
+      <button id="disconnectButton" disabled><i class="fas fa-unlink"></i> 斷開連線</button>
+      <button id="toggleDataButton"><i class="fas fa-eye"></i> 顯示/隱藏保存的數據</button>
+      <div id="dataContainer" style="display: none;">
+        <h3>歷史量測數據</h3>
+        <div id="dataHistory"></div>
+        <button id="clearAllButton" style="color: red; margin-top: 10px;">清空所有數據</button>
+      </div>
+
+
     </div>
+
+
   </div>
   <script src="app.js"></script>
+
+  <script src="jquery-3.7.1.min.js"></script>
+
 </body>
 </html>
