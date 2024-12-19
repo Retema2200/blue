@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="/blue/images/favicon.ico" type="image/x-icon">
-
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 </head>
 
@@ -21,6 +21,9 @@
       <button class="sendButton" disabled data-message="2"><i class="fas fa-thermometer-half"></i> 量測溫濕度</button>
       <button class="sendButton" disabled data-message="3"><i class="fas fa-cloud"></i> 量測氣壓</button>
       <button id="measureOxygenButton" class="sendButton" disabled data-message="4"><i class="fas fa-heartbeat"></i> 量測血氧</button>
+      <button class="sendButton" disabled data-message="5" id="autoMeasureButton"><i class="fas fa-play"></i> 自動量測</button>
+      <button class="sendButton" disabled data-message="6" id="unclock"><i class="fas fa-stop"></i> 關閉自動量測</button>
+
       <button id="disconnectButton" disabled><i class="fas fa-unlink"></i> 斷開連線</button>
       <button id="toggleDataButton"><i class="fas fa-eye"></i> 顯示/隱藏保存的數據</button>
       <div id="dataContainer" style="display: none;">
@@ -35,7 +38,6 @@
 
   </div>
   <script src="app.js"></script>
-
   <script src="jquery-3.7.1.min.js"></script>
 
 </body>
