@@ -76,6 +76,23 @@ function handleNotification(event) {
      statusDisplay.textContent = `緊急按鈕被按下`;
      message = `緊急按鈕已觸發`;
       break;
+    case 0x06: // 光照值
+    const tempValue1 = (value[3] | (value[4] << 8)) / 10;
+    const humValue1 = (value[1] | (value[2] << 8)) / 10;
+    const glvValue1 = value[5] | (value[6] << 8); 
+    const relglv1 = glvValue1 / 10;
+
+
+  
+
+    statusDisplay.textContent = `目前溫度：${tempValue1.toFixed(1)}°C，濕度：${humValue1.toFixed(1)}%，目前壓力值：${relglv1.toFixed(1)} hpa                 `;
+
+
+
+    break;
+
+
+      
 
     default:
       statusDisplay.textContent = '未知數據類型';
@@ -216,8 +233,17 @@ document.addEventListener('DOMContentLoaded', () => {
           break;
         case '4':
           statusDisplay.textContent = '正在量測血氧與心率...';
-          console.log('已發送血氧量測命令: 0x34');
+          console.log('量測血氧與心率...');
           break;
+        case '5':
+          statusDisplay.textContent = '正在進行自動量測';
+          console.log('進行自動量測');
+          break;
+        case '6':
+          statusDisplay.textContent = '已關閉自動量測';
+           console.log('已關閉自動量測');
+          break;
+
         default:
           statusDisplay.textContent = '未知的操作';
           console.log('未知的命令');
@@ -266,3 +292,29 @@ document.getElementById('clearAllButton').addEventListener('click', () => {
 
 displaySavedData();
 
+
+
+
+// 自動量測按鈕邏輯
+document.getElementById('autoMeasureButton').addEventListener('click', () => {
+  // 獲取需要禁用的按鈕
+  const buttonsToDisable = document.querySelectorAll('.sendButton[data-message="2"], .sendButton[data-message="3"], .sendButton[data-message="4"]');
+
+  // 禁用這三個按鈕
+  buttonsToDisable.forEach(button => {
+    button.disabled = true; // 禁用按鈕
+  });
+
+  console.log('量測溫濕度、量測氣壓、量測血氧按鈕已被鎖住');
+});
+
+// 解鎖按鈕邏輯
+document.getElementById('unclock').addEventListener('click', () => {
+  const buttonsToEnable = document.querySelectorAll('.sendButton[data-message="2"], .sendButton[data-message="3"], .sendButton[data-message="4"]');
+
+  buttonsToEnable.forEach(button => {
+    button.disabled = false; // 啟用按鈕
+  });
+
+  console.log('量測按鈕已解鎖');
+});
