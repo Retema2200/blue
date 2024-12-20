@@ -308,13 +308,70 @@ document.getElementById('autoMeasureButton').addEventListener('click', () => {
   console.log('量測溫濕度、量測氣壓、量測血氧按鈕已被鎖住');
 });
 
-// 解鎖按鈕邏輯
-document.getElementById('unclock').addEventListener('click', () => {
-  const buttonsToEnable = document.querySelectorAll('.sendButton[data-message="2"], .sendButton[data-message="3"], .sendButton[data-message="4"]');
 
+
+
+
+// 關閉自動量測邏輯
+document.getElementById('unclock').addEventListener('click', async () => {
+  const message = "6"; // 關閉自動量測的指令
+  const encoder = new TextEncoder(); // 編碼器
+
+  // 等待藍牙閒置
+  const waitForBluetoothIdle = async (timeout = 5000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeout) {
+      try {
+        // 嘗試執行空指令來檢查是否閒置
+        await writeCharacteristic.writeValue(encoder.encode("0"));
+        return true; // 成功，表示藍牙已閒置
+      } catch (error) {
+        if (error.message.includes("GATT operation already in progress")) {
+          // 等待100ms後重試
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } else {
+          console.error("藍牙閒置檢查失敗: ", error);
+          return false;
+        }
+      }
+    }
+    console.error("藍牙閒置檢查超時");
+    return false;
+  };
+
+  // 發送關閉命令的函數
+  const sendCloseCommand = async (attempt) => {
+    try {
+      const data = encoder.encode(message);
+      await writeCharacteristic.writeValue(data); // 發送指令
+      console.log(`關閉自動量測命令已發送 (第 ${attempt + 1} 次)`);
+      return true; // 發送成功
+    } catch (error) {
+      console.log(`關閉自動量測命令發送失敗 (第 ${attempt + 1} 次): `, error);
+      return false; // 發送失敗
+    }
+  };
+
+  // 等待藍牙閒置
+  const isIdle = await waitForBluetoothIdle();
+  if (!isIdle) {
+    console.error("藍牙仍然忙碌，無法發送關閉命令");
+    return;
+  }
+
+  // 一定發送三次指令
+  for (let i = 0; i < 3; i++) {
+    await sendCloseCommand(i); // 無論成功與否都執行
+    // 每次發送後延遲 500 毫秒
+    await new Promise(resolve => setTimeout(resolve, 750));
+  }
+
+  // 解鎖按鈕
+  const buttonsToEnable = document.querySelectorAll('.sendButton[data-message="2"], .sendButton[data-message="3"], .sendButton[data-message="4"]');
   buttonsToEnable.forEach(button => {
     button.disabled = false; // 啟用按鈕
   });
 
   console.log('量測按鈕已解鎖');
+  statusDisplay.textContent = '已關閉自動量測';
 });
